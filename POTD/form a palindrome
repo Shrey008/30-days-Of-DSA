@@ -1,0 +1,51 @@
+//{ Driver Code Starts
+import java.io.*;
+import java.util.*; 
+
+class GFG{
+    public static void main(String args[]) throws IOException { 
+        BufferedReader read = new BufferedReader(new InputStreamReader(System.in));
+        int t = Integer.parseInt(read.readLine());
+        
+        while(t-- > 0){
+            String str = read.readLine();
+
+            Solution ob = new Solution();
+            
+            System.out.println(ob.countMin(str));
+        }
+    } 
+} 
+// } Driver Code Ends
+
+
+class Solution {
+    
+    static int findMinInsertions(String str, int l, int h, int[][] memo) {
+        if (l > h) return Integer.MAX_VALUE;
+        if (l == h) return 0;
+        if (l == h - 1) return (str.charAt(l) == str.charAt(h)) ? 0 : 1;
+
+        // If the result is already calculated, return it
+        if (memo[l][h] != -1) return memo[l][h];
+
+        if (str.charAt(l) == str.charAt(h)) {
+            memo[l][h] = findMinInsertions(str, l + 1, h - 1, memo);
+        } else {
+            memo[l][h] = Math.min(findMinInsertions(str, l, h - 1, memo), findMinInsertions(str, l + 1, h, memo)) + 1;
+        }
+
+        return memo[l][h];
+    }
+
+    static int countMin(String str) {
+        int n = str.length();
+        int[][] memo = new int[n][n];
+        for (int[] row : memo) {
+            Arrays.fill(row, -1);
+        }
+        return findMinInsertions(str, 0, n - 1, memo);
+    }
+
+   
+}
