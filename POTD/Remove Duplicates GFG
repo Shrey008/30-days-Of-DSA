@@ -1,0 +1,24 @@
+ 
+
+class Solution {
+    String removeDups(String str) {
+        // code here
+                HashSet<Character> seen = new HashSet<>();
+        // StringBuilder to build the result string
+        StringBuilder result = new StringBuilder();
+        
+        // Iterate over each character in the input string
+        for (char c : str.toCharArray()) {
+            // If the character hasn't been seen before, add it to the result
+            if (!seen.contains(c)) {
+                seen.add(c);
+                result.append(c);
+            }
+        }
+        
+        // Convert the StringBuilder to a string and return it
+        return result.toString();
+    }
+
+    }
+
