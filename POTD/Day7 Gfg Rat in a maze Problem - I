@@ -1,0 +1,78 @@
+//{ Driver Code Starts
+// Initial Template for Java
+
+import java.util.*;
+
+class Rat {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int t = sc.nextInt();
+
+        while (t-- > 0) {
+            int n = sc.nextInt();
+            int[][] a = new int[n][n];
+            for (int i = 0; i < n; i++)
+                for (int j = 0; j < n; j++) a[i][j] = sc.nextInt();
+
+            Solution obj = new Solution();
+            ArrayList<String> res = obj.findPath(a);
+            Collections.sort(res);
+            if (res.size() > 0) {
+                for (int i = 0; i < res.size(); i++) System.out.print(res.get(i) + " ");
+                System.out.println();
+            } else {
+                System.out.println(-1);
+            }
+        }
+    }
+}
+
+// } Driver Code Ends
+
+
+ class Solution {
+    // Directions for moving Up, Down, Left, Right
+    private static final int[] rowDir = {-1, 1, 0, 0};
+    private static final int[] colDir = {0, 0, -1, 1};
+    private static final char[] dirChar = {'U', 'D', 'L', 'R'};
+    
+    public ArrayList<String> findPath(int[][] mat) {
+        ArrayList<String> paths = new ArrayList<>();
+        if (mat == null || mat.length == 0 || mat[0][0] == 0) {
+            return paths;  // Return empty list if starting point is blocked
+        }
+        boolean[][] visited = new boolean[mat.length][mat[0].length];
+        findPathsUtil(mat, 0, 0, visited, "", paths);
+        return paths;
+    }
+    
+    private void findPathsUtil(int[][] mat, int row, int col, boolean[][] visited, String path, ArrayList<String> paths) {
+        int n = mat.length;
+        // If destination (n-1, n-1) is reached, add the path to the list
+        if (row == n - 1 && col == n - 1) {
+            paths.add(path);
+            return;
+        }
+        
+        // Mark the cell as visited
+        visited[row][col] = true;
+        
+        // Explore all 4 directions
+        for (int i = 0; i < 4; i++) {
+            int newRow = row + rowDir[i];
+            int newCol = col + colDir[i];
+            
+            if (isSafe(mat, newRow, newCol, visited)) {
+                findPathsUtil(mat, newRow, newCol, visited, path + dirChar[i], paths);
+            }
+        }
+        
+        // Backtrack: Unmark the cell as visited
+        visited[row][col] = false;
+    }
+    
+    private boolean isSafe(int[][] mat, int row, int col, boolean[][] visited) {
+        int n = mat.length;
+        return row >= 0 && row < n && col >= 0 && col < n && mat[row][col] == 1 && !visited[row][col];
+    }
+}
