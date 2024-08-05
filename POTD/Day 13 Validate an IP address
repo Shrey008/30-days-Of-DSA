@@ -1,0 +1,39 @@
+class Solution {
+
+    public boolean isValid(String str) {
+        // Split the string by dot (.)
+        String[] parts = str.split("\\.");
+        
+        // IPv4 address should contain exactly 4 parts
+        if (parts.length != 4) {
+            return false;
+        }
+        
+        for (String part : parts) {
+            // Check if the part is empty or has more than 3 digits
+            if (part.length() == 0 || part.length() > 3) {
+                return false;
+            }
+            
+            // Check if the part has leading zeros
+            if (part.length() > 1 && part.charAt(0) == '0') {
+                return false;
+            }
+            
+            try {
+                // Parse the part to an integer
+                int num = Integer.parseInt(part);
+                
+                // Check if the parsed number is in the valid range
+                if (num < 0 || num > 255) {
+                    return false;
+                }
+            } catch (NumberFormatException e) {
+                // If parsing to integer fails, it's not a valid number
+                return false;
+            }
+        }
+        
+        return true;
+    }
+ }
