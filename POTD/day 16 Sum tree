@@ -1,0 +1,64 @@
+https://www.geeksforgeeks.org/problems/sum-tree/1
+
+/* A Binary Tree node
+class Node
+{
+    int data;
+    Node left, right;
+
+    Node(int item)
+    {
+        data = item;
+        left = right = null;
+    }
+}
+*/
+class Solution {
+    // Helper function to check Sum Tree and return sum of subtree
+    private Pair<Boolean, Integer> isSumTreeHelper(Node node) {
+        // Base case: empty tree
+        if (node == null) {
+            return new Pair<>(true, 0);
+        }
+
+        // If the node is a leaf node
+        if (node.left == null && node.right == null) {
+            return new Pair<>(true, node.data);
+        }
+
+        // Recursive check for left and right subtree
+        Pair<Boolean, Integer> leftResult = isSumTreeHelper(node.left);
+        Pair<Boolean, Integer> rightResult = isSumTreeHelper(node.right);
+
+        // Check if the current node satisfies the Sum Tree property
+        boolean isSumTree = leftResult.getKey() && rightResult.getKey() &&
+                            (node.data == leftResult.getValue() + rightResult.getValue());
+
+        // Return result and sum of subtree rooted at current node
+        return new Pair<>(isSumTree, node.data + leftResult.getValue() + rightResult.getValue());
+    }
+
+    // Function to check if the tree is a Sum Tree
+    boolean isSumTree(Node root) {
+        return isSumTreeHelper(root).getKey();
+    }
+
+    // Pair class to hold boolean and integer values
+    private static class Pair<K, V> {
+        private final K key;
+        private final V value;
+
+        public Pair(K key, V value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        public K getKey() {
+            return key;
+        }
+
+        public V getValue() {
+            return value;
+        }
+    }
+}
