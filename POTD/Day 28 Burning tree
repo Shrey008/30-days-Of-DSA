@@ -1,0 +1,93 @@
+class Solution
+{
+    /*class Node {
+    	int data;
+    	Node left;
+    	Node right;
+    
+    	Node(int data) {
+    		this.data = data;
+    		left = null;
+    		right = null;
+    	}
+    }*/
+    
+    public static int minTime(Node root, int target) 
+    {
+         
+        Map<Node, Node> parentMap = new HashMap<>();
+        Node targetNode = markParents(root, parentMap, target);
+        
+        
+        return bfsToBurnTree(targetNode, parentMap);
+    }
+    
+    private static Node markParents(Node root, Map<Node, Node> parentMap, int target) {
+        Queue<Node> queue = new LinkedList<>();
+        queue.offer(root);
+        Node targetNode = null;
+        
+        while (!queue.isEmpty()) {
+            Node currentNode = queue.poll();
+            
+            if (currentNode.data == target) {
+                targetNode = currentNode;
+            }
+            
+            if (currentNode.left != null) {
+                parentMap.put(currentNode.left, currentNode);
+                queue.offer(currentNode.left);
+            }
+            if (currentNode.right != null) {
+                parentMap.put(currentNode.right, currentNode);
+                queue.offer(currentNode.right);
+            }
+        }
+        
+        return targetNode;
+    }
+    
+    private static int bfsToBurnTree(Node targetNode, Map<Node, Node> parentMap) {
+        Queue<Node> queue = new LinkedList<>();
+        Set<Node> visited = new HashSet<>();
+        
+        queue.offer(targetNode);
+        visited.add(targetNode);
+        
+        int time = 0;
+        
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            boolean burnedAnyNode = false;
+            
+            for (int i = 0; i < size; i++) {
+                Node currentNode = queue.poll();
+                
+                if (currentNode.left != null && !visited.contains(currentNode.left)) {
+                    burnedAnyNode = true;
+                    visited.add(currentNode.left);
+                    queue.offer(currentNode.left);
+                }
+                
+                if (currentNode.right != null && !visited.contains(currentNode.right)) {
+                    burnedAnyNode = true;
+                    visited.add(currentNode.right);
+                    queue.offer(currentNode.right);
+                }
+                
+                if (parentMap.containsKey(currentNode) && !visited.contains(parentMap.get(currentNode))) {
+                    burnedAnyNode = true;
+                    visited.add(parentMap.get(currentNode));
+                    queue.offer(parentMap.get(currentNode));
+                }
+            }
+            
+            if (burnedAnyNode) {
+                time++;
+            }
+        }
+        
+        return time;
+    }
+}
+
